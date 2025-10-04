@@ -6,6 +6,7 @@ from model.livenessnet import LivenessNet
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.utils import to_categorical
@@ -31,8 +32,8 @@ args = vars(ap.parse_args())
 
 # Cai dat learn rate, so epoch=40, batch size =8
 INIT_LR = 1e-4
-BS = 8
-EPOCHS = 10
+BS = 32
+EPOCHS = 50
 
 # Doc du lieu khuon mat trong Dataset
 print("[INFO] loading images...")
@@ -44,7 +45,7 @@ for imagePath in imagePaths:
 	# Resize cac khuon mat ve 32x32 va them vao du lieu train gom image va label
 	label = imagePath.split(os.path.sep)[-2]
 	image = cv2.imread(imagePath)
-	image = cv2.resize(image, (32, 32))
+	image = cv2.resize(image, (64, 64))
 
 	data.append(image)
 	labels.append(label)
@@ -63,16 +64,19 @@ labels = to_categorical(labels, 2)
 
 # Augment anh cho phong phu du lieu train
 aug = ImageDataGenerator(rotation_range=20, zoom_range=0.2,
-	width_shift_range=0.2, height_shift_range=0.2, shear_range=0.15, brightness_range=[1,1.5],
+	width_shift_range=0.2, height_shift_range=0.2,
 	horizontal_flip=True, fill_mode="nearest")
 
 # Compile model
 print("[INFO] compiling model...")
 opt = Adam(learning_rate=INIT_LR)
-model = LivenessNet.build(width=32, height=32, depth=3,
+model = LivenessNet.build(width= 64, height=64, depth=3,
 	classes=len(le.classes_))
-model.compile(loss="binary_crossentropy", optimizer=opt,
+model.compile(loss="categorical_crossentropy", optimizer=opt,
 	metrics=["accuracy"])
+
+
+
 
 # train
 print("[INFO] training network for {} epochs...".format(EPOCHS))
@@ -97,3 +101,14 @@ model.save(args["model"])
 f = open(args["le"], "wb")
 f.write(pickle.dumps(le))
 f.close()
+
+plt.style.use("ggplot")
+plt.figure()
+plt.plot(np.arange(0, EPOCHS), H.history["loss"], label="train_loss")
+plt.plot(np.arange(0, EPOCHS), H.history["val_loss"], label="val_loss")
+plt.plot(np.arange(0, EPOCHS), H.history["accuracy"], label="train_acc")
+plt.plot(np.arange(0, EPOCHS), H.history["val_accuracy"], label="val_acc")
+plt.xlabel("Epoch #")
+plt.ylabel("Loss/Accuracy")
+plt.legend()
+plt.savefig(args["plot"])

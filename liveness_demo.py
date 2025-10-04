@@ -3,8 +3,8 @@
 
 # import the necessary packages
 from imutils.video import VideoStream
-from keras.preprocessing.image import img_to_array
-from keras.models import load_model
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.models import load_model
 import numpy as np
 import argparse
 import imutils
@@ -17,7 +17,7 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 
 # Cai dat cac tham so dau vao
 ap = argparse.ArgumentParser()
-ap.add_argument("-m", "--model", type=str, default='liveness.model',
+ap.add_argument("-m", "--model", type=str, default='liveness.keras',
 	help="path to trained model")
 ap.add_argument("-l", "--le", type=str, default='le.pickle',
 	help="path to label encoder")
@@ -76,7 +76,13 @@ while True:
 
 			# Lay vung khuon mat
 			face = frame[startY:endY, startX:endX]
-			face = cv2.resize(face, (32, 32))
+			
+			# Kiem tra neu face rong (khong phat hien duoc khuon mat)
+			if face.size == 0 or face.shape[0] == 0 or face.shape[1] == 0:
+				continue
+				
+			# Thay doi resize tu 32x32 thanh 64x64 de khop voi model
+			face = cv2.resize(face, (64, 64))
 			face = face.astype("float") / 255.0
 			face = img_to_array(face)
 			face = np.expand_dims(face, axis=0)
