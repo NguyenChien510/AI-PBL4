@@ -5,7 +5,7 @@ import torchvision.transforms as transforms
 from cnn_model import AntiSpoofCNN
 
 # Load YOLO model (detect face)
-model = YOLO("./runs/detect/train_local2/weights/best.pt")
+model = YOLO("./runs/detect/train5/weights/best.pt")
 
 # Load CNN model (real/fake)
 cnn_model = AntiSpoofCNN()
