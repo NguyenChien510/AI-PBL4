@@ -8,7 +8,7 @@ import time
 import os
 
 # --- Load model YOLO để nhận diện tên người ---
-yolo_model = YOLO("./runs/detect/train5/weights/best.pt")  
+yolo_model = YOLO("./runs/detect/train4/weights/best.pt")  
 
 # --- Load Liveness CNN ---
 liveness_model = load_model("liveness.keras")

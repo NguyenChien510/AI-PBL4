@@ -2,7 +2,9 @@ path: ./datasets
 train: images/train
 val: images/val
 
-nc: 2
+nc: 4
 names:
   - MinhChien
   - MinhNhat
+  - ThanhChung
+  - TrongNguyen

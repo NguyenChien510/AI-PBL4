@@ -3,8 +3,8 @@ import os
 import numpy as np
 
 # --- Cấu hình ---
-video_path = "videos/realVAL.mp4"
-class_id = 0  # MinhChien
+video_path = "videos/trongnguyenval.mp4"
+class_id = 3  # ThanhChung
 output_img_dir = "datasets/images/val"
 output_label_dir = "datasets/labels/val"
 
@@ -58,7 +58,7 @@ while True:
 
             # Lưu file label
             saved_count += 1
-            img_filename = f"MinhChien{saved_count:05d}.png"
+            img_filename = f"TrongNguyen{saved_count:05d}.png"
             img_path = os.path.join(output_img_dir, img_filename)
             label_path = os.path.join(output_label_dir, os.path.splitext(img_filename)[0] + ".txt")
 
