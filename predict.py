@@ -1,6 +1,5 @@
 import cv2
 from ultralytics import YOLO
-import time
 
 # Load model YOLO
 model = YOLO("./runs/detect/train1/weights/last.pt")
