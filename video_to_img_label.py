@@ -4,7 +4,7 @@ import numpy as np
 
 # --- Cấu hình ---
 video_path = "videos/trongnguyenval.mp4"
-class_id = 3  # ThanhChung
+class_id = 3
 output_img_dir = "datasets/images/val"
 output_label_dir = "datasets/labels/val"
 
